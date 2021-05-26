@@ -1,0 +1,51 @@
+{include file="$esa_header"}
+<div class="padding-md">
+    <ul class="breadcrumb">
+        <li>万能表单</li>
+        <li>分类管理</li>	  
+    </ul>
+    <div class="smart-widget">
+        <div id="table"></div>
+    </div>
+</div>
+<script id="headToolbar" type="text/html">
+    <div class="padding-sm">
+        <button class="btn btn-primary btn-sm" esa-event="add">添加</button>
+        <button class="btn btn-info btn-sm" esa-event="reload"><i class="fa fa-refresh"></i></button>
+    <div>
+</script>
+<script id="tool" type="text/html">
+    <%if (id%2 == 1) {%><button esa-event="do">测试</button><% } %>
+</script>
+<script>
+require(['ESA','esa_table','layer',"esa_switch"],function(ESA,Table,layer){
+    Table.init({
+        elem: "#table",
+        page: true,
+        select: "checkbox",
+        cols: [
+            {field:"id",width:"50px",title:"PID"},
+            {field:"logo",width:"100px",title:"头像"},
+            {field:"type",width:"150px",title:"类型"},
+            {field:"name",width:"auto",title:"标题"},
+            {field:"nickname",width:"100px",title:"管理员"},
+            {field:"id",title:"模板",tpl:function(d){
+                return "<span class='switch-off switch-sm' esa-event='test'><span class='slider'></span></span>";
+            }},
+            {field:"tool",width:"10%",title:"操作",toolbar:"#tool"}
+        ],
+        headToolbar:"#headToolbar",
+        limit: 5,
+    })
+    Table.on("#table",function(obj){
+        if(obj.event == "reload"){
+            Table.reload("#table");
+        }else if(obj.event == "add"){
+            ESA.fun.open("{:addons_url('acc_form://admin.classes/form')}","添加",{});
+        }else{
+            ESA.msg(obj.event+"事件触发");
+        }
+    })
+})
+</script>
+{include file="$esa_footer"}
